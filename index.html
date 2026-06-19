@@ -449,7 +449,7 @@ function viewCardHTML(d){
     '<div class="mr">'+(d.inviata?'<i class="ti ti-calendar-event"></i>Inviata il '+fmt(d.inviata):'<i class="ti ti-calendar-off"></i><span style="color:#ccc">Data invio non impostata</span>')+'</div>'+
     (d.ricontatto?'<div class="mr ri"><i class="ti ti-bell"></i>Ricontatto '+fmt(d.ricontatto)+'</div>':'')+
     ((d.ricontatto||d.link)?'<div class="cfoot">'+
-    (d.ricontatto?(d.tipo_cal==='Google'?'<a class="fb ag" href="'+au+'" target="_blank" rel="noopener"><i class="ti ti-brand-google" style="font-size:11px"></i>Google Calendar</a>':'<button class="fb ag" onclick="downloadICS(''+d.id+'')"><i class="ti ti-calendar-event" style="font-size:11px"></i>Aggiungi a Outlook</button>'):'')+(d.link?'<a class="fb pr" href="'+esc(d.link)+'" target="_blank" rel="noopener"><i class="ti ti-external-link" style="font-size:11px"></i>Apri proposta</a>':'')+'</div>':'')+
+    (d.ricontatto?(d.tipo_cal==='Google'?'<a class="fb ag" href="'+au+'" target="_blank" rel="noopener"><i class="ti ti-brand-google" style="font-size:11px"></i>Google Calendar</a>':'<button class="fb ag" onclick="downloadICS('\''+d.id+'\'')"><i class="ti ti-calendar-event" style="font-size:11px"></i>Aggiungi a Outlook</button>'):'')+(d.link?'<a class="fb pr" href="'+esc(d.link)+'" target="_blank" rel="noopener"><i class="ti ti-external-link" style="font-size:11px"></i>Apri proposta</a>':'')+'</div>':'')+
     '</div>';
 }
 function editCardHTML(d){
@@ -478,7 +478,7 @@ function viewKcardHTML(d){
     (d.inviata?'<div class="km"><i class="ti ti-calendar-event"></i>'+fmt(d.inviata)+'</div>':'')+
     (d.ricontatto?'<div class="km ri"><i class="ti ti-bell"></i>'+fmt(d.ricontatto)+'</div>':'')+
     ((d.ricontatto||d.link)?'<div class="kfoot">'+
-    (d.ricontatto?(d.tipo_cal==='Google'?'<a class="kfb ka" href="'+au+'" target="_blank" rel="noopener"><i class="ti ti-brand-google"></i>Google</a>':'<button class="kfb ka" onclick="downloadICS(''+d.id+'')"><i class="ti ti-calendar-event"></i>Outlook</button>'):'')+(d.link?'<a class="kfb kp" href="'+esc(d.link)+'" target="_blank" rel="noopener"><i class="ti ti-external-link"></i>Proposta</a>':'')+'</div>':'')+
+    (d.ricontatto?(d.tipo_cal==='Google'?'<a class="kfb ka" href="'+au+'" target="_blank" rel="noopener"><i class="ti ti-brand-google"></i>Google</a>':'<button class="kfb ka" onclick="downloadICS('\''+d.id+'\'')"><i class="ti ti-calendar-event"></i>Outlook</button>'):'')+(d.link?'<a class="kfb kp" href="'+esc(d.link)+'" target="_blank" rel="noopener"><i class="ti ti-external-link"></i>Proposta</a>':'')+'</div>':'')+
     '</div>';
 }
 function editKcardHTML(d){
