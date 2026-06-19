@@ -89,7 +89,7 @@ input,select{font-family:Arial,sans-serif;}
 .mr i{font-size:12px;}.mr.ri{color:#1F4E79;font-weight:600;}
 .cfoot{display:flex;gap:6px;margin-top:10px;padding-top:9px;border-top:1px solid #eee;flex-wrap:wrap;}
 .fb{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:4px 11px;border-radius:20px;cursor:pointer;background:transparent;text-decoration:none;font-weight:700;border:1.5px solid;}
-.fb.ag{color:#1F4E79;border-color:#BDD7EE;}.fb.ag:hover{background:#BDD7EE;}
+.fb.ag{color:#1F4E79;border-color:#BDD7EE;cursor:pointer;font-family:Arial,sans-serif;}.fb.ag:hover{background:#BDD7EE;}
 .fb.pr{color:#276221;border-color:#C6EFCE;}.fb.pr:hover{background:#C6EFCE;}
 .card.editing{border:2px solid #2B5F9E;box-shadow:0 4px 20px rgba(43,95,158,.15);padding:16px 18px 16px 22px;}
 .card.editing .acc{top:14px;bottom:14px;}
@@ -122,7 +122,7 @@ input,select{font-family:Arial,sans-serif;}
 .km i{font-size:11px;}.km.ri{color:#1F4E79;font-weight:600;}
 .kfoot{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap;}
 .kfb{display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:3px 8px;border-radius:20px;cursor:pointer;background:transparent;text-decoration:none;font-weight:700;border:1.5px solid;}
-.kfb.ka{color:#1F4E79;border-color:#BDD7EE;}.kfb.ka:hover{background:#BDD7EE;}
+.kfb.ka{color:#1F4E79;border-color:#BDD7EE;cursor:pointer;font-family:Arial,sans-serif;}.kfb.ka:hover{background:#BDD7EE;}
 .kfb.kp{color:#276221;border-color:#C6EFCE;}.kfb.kp:hover{background:#C6EFCE;}
 .k-acts{position:absolute;top:7px;right:8px;display:flex;gap:4px;opacity:0;transition:opacity .12s;}
 .kcard:hover .k-acts{opacity:1;}
@@ -410,11 +410,40 @@ function delDeal(id){
 
 /* ══ AGENDA ══ */
 function agUrl(d){
-  if(!d.ricontatto)return null;
+  // Google Calendar: URL diretta
+  if(!d.ricontatto||d.tipo_cal!=='Google')return null;
   var s=encodeURIComponent('Ricontatto '+d.cliente+' – '+d.attività);
   var b=encodeURIComponent('Offerta: '+d.attività+' | Cliente: '+d.cliente);
-  if(d.tipo_cal==='Google'){var dt=d.ricontatto.replace(/-/g,'');return'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+s+'&dates='+dt+'T090000/'+dt+'T100000&details='+b;}
-  return'https://outlook.live.com/calendar/0/deeplink/compose?subject='+s+'&startdt='+d.ricontatto+'T09:00:00&enddt='+d.ricontatto+'T10:00:00&body='+b;
+  var dt=d.ricontatto.replace(/-/g,'');
+  return'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+s+'&dates='+dt+'T090000/'+dt+'T100000&details='+b;
+}
+function downloadICS(id){
+  // Outlook e altri: scarica file .ics universale
+  var d=byId(id); if(!d||!d.ricontatto)return;
+  var dt=d.ricontatto.replace(/-/g,'');
+  var now=new Date().toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
+  var ics=[
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//kbrand CRM//IT',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'BEGIN:VEVENT',
+    'UID:'+id+'-'+dt+'@kbrand-crm',
+    'DTSTAMP:'+now,
+    'DTSTART:'+dt+'T090000',
+    'DTEND:'+dt+'T100000',
+    'SUMMARY:Ricontatto '+d.cliente+' \u2013 '+d.attività,
+    'DESCRIPTION:Offerta: '+d.attività+' | Cliente: '+d.cliente,
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+  var blob=new Blob([ics],{type:'text/calendar;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url; a.download='ricontatto-'+d.cliente.replace(/[^a-zA-Z0-9]/g,'-')+'.ics';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
 }
 
 /* ══ HTML helpers ══ */
@@ -434,7 +463,8 @@ function viewCardHTML(d){
     '<div class="atag"><i class="ti ti-tag" style="font-size:10px"></i>'+esc(d.attività)+'</div>'+
     '<div class="mr">'+(d.inviata?'<i class="ti ti-calendar-event"></i>Inviata il '+fmt(d.inviata):'<i class="ti ti-calendar-off"></i><span style="color:#ccc">Data invio non impostata</span>')+'</div>'+
     (d.ricontatto?'<div class="mr ri"><i class="ti ti-bell"></i>Ricontatto '+fmt(d.ricontatto)+'</div>':'')+
-    (au||d.link?'<div class="cfoot">'+(au?'<a class="fb ag" href="'+au+'" target="_blank" rel="noopener"><i class="ti '+agIco+'" style="font-size:11px"></i>'+agLbl+'</a>':'')+(d.link?'<a class="fb pr" href="'+esc(d.link)+'" target="_blank" rel="noopener"><i class="ti ti-external-link" style="font-size:11px"></i>Apri proposta</a>':'')+'</div>':'')+
+    ((d.ricontatto||d.link)?'<div class="cfoot">'+
+    (d.ricontatto?(d.tipo_cal==='Google'?'<a class="fb ag" href="'+au+'" target="_blank" rel="noopener"><i class="ti ti-brand-google" style="font-size:11px"></i>Google Calendar</a>':'<button class="fb ag" onclick="downloadICS(''+d.id+'')"><i class="ti ti-calendar-event" style="font-size:11px"></i>Aggiungi a Outlook</button>'):'')+(d.link?'<a class="fb pr" href="'+esc(d.link)+'" target="_blank" rel="noopener"><i class="ti ti-external-link" style="font-size:11px"></i>Apri proposta</a>':'')+'</div>':'')+
     '</div>';
 }
 function editCardHTML(d){
@@ -462,7 +492,8 @@ function viewKcardHTML(d){
     '<div class="kn">'+esc(d.cliente)+'</div><div class="kt">'+esc(d.attività)+'</div>'+
     (d.inviata?'<div class="km"><i class="ti ti-calendar-event"></i>'+fmt(d.inviata)+'</div>':'')+
     (d.ricontatto?'<div class="km ri"><i class="ti ti-bell"></i>'+fmt(d.ricontatto)+'</div>':'')+
-    (au||d.link?'<div class="kfoot">'+(au?'<a class="kfb ka" href="'+au+'" target="_blank" rel="noopener"><i class="ti '+agIco+'"></i>'+agLbl+'</a>':'')+(d.link?'<a class="kfb kp" href="'+esc(d.link)+'" target="_blank" rel="noopener"><i class="ti ti-external-link"></i>Proposta</a>':'')+'</div>':'')+
+    ((d.ricontatto||d.link)?'<div class="kfoot">'+
+    (d.ricontatto?(d.tipo_cal==='Google'?'<a class="kfb ka" href="'+au+'" target="_blank" rel="noopener"><i class="ti ti-brand-google"></i>Google</a>':'<button class="kfb ka" onclick="downloadICS(''+d.id+'')"><i class="ti ti-calendar-event"></i>Outlook</button>'):'')+(d.link?'<a class="kfb kp" href="'+esc(d.link)+'" target="_blank" rel="noopener"><i class="ti ti-external-link"></i>Proposta</a>':'')+'</div>':'')+
     '</div>';
 }
 function editKcardHTML(d){
