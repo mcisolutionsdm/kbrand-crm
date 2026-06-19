@@ -418,35 +418,20 @@ function agUrl(d){
   return'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+s+'&dates='+dt+'T090000/'+dt+'T100000&details='+b;
 }
 function downloadICS(id){
-  // Outlook e altri: scarica file .ics universale
   var d=byId(id); if(!d||!d.ricontatto)return;
   var dt=d.ricontatto.replace(/-/g,'');
-  var now=new Date().toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
-  var ics=[
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'PRODID:-//kbrand CRM//IT',
-    'CALSCALE:GREGORIAN',
-    'METHOD:PUBLISH',
-    'BEGIN:VEVENT',
-    'UID:'+id+'-'+dt+'@kbrand-crm',
-    'DTSTAMP:'+now,
-    'DTSTART:'+dt+'T090000',
-    'DTEND:'+dt+'T100000',
-    'SUMMARY:Ricontatto '+d.cliente+' \u2013 '+d.attività,
-    'DESCRIPTION:Offerta: '+d.attività+' | Cliente: '+d.cliente,
-    'END:VEVENT',
-    'END:VCALENDAR'
-  ].join('\r\n');
+  var now=new Date().toISOString().replace(/[^0-9T]/g,'').slice(0,15)+'Z';
+  var subj='Ricontatto '+d.cliente+' - '+d.attività;
+  var desc='Offerta: '+d.attività+' | Cliente: '+d.cliente;
+  var ics='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//kbrand CRM//IT\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VEVENT\r\nUID:kbrand-'+id+'@crm\r\nDTSTAMP:'+now+'\r\nDTSTART:'+dt+'T090000\r\nDTEND:'+dt+'T100000\r\nSUMMARY:'+subj+'\r\nDESCRIPTION:'+desc+'\r\nEND:VEVENT\r\nEND:VCALENDAR';
   var blob=new Blob([ics],{type:'text/calendar;charset=utf-8'});
   var url=URL.createObjectURL(blob);
   var a=document.createElement('a');
-  a.href=url; a.download='ricontatto-'+d.cliente.replace(/[^a-zA-Z0-9]/g,'-')+'.ics';
-  document.body.appendChild(a); a.click();
-  document.body.removeChild(a); URL.revokeObjectURL(url);
+  a.href=url; a.download='ricontatto-'+(d.cliente||'evento').replace(/[^a-zA-Z0-9]/g,'-')+'.ics';
+  a.style.display='none'; document.body.appendChild(a); a.click();
+  setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},200);
 }
 
-/* ══ HTML helpers ══ */
 function bdg(s){var m={INVIATA:['bi','ti-send','Inviata'],Firmata:['bf','ti-circle-check','Firmata'],Persa:['bp','ti-circle-x','Persa'],bozza:['bb','ti-clock','Da inviare']};var r=m[s];return'<span class="badge '+r[0]+'"><i class="ti '+r[1]+'" style="font-size:10px;vertical-align:-1px;margin-right:2px"></i>'+r[2]+'</span>';}
 function sOpts(c){return[['bozza','Da inviare'],['INVIATA','Inviata'],['Firmata','Firmata'],['Persa','Persa']].map(function(o){return'<option value="'+o[0]+'"'+(c===o[0]?' selected':'')+'>'+o[1]+'</option>';}).join('');}
 function calOpts(c,compact){var opts=compact?[['','—'],['Outlook','Outlook'],['Google','Google']]:[['','— nessuna —'],['Outlook','Outlook'],['Google','Google Calendar']];return opts.map(function(o){return'<option value="'+o[0]+'"'+(c===o[0]?' selected':'')+'>'+o[1]+'</option>';}).join('');}
