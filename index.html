@@ -306,21 +306,50 @@ function norm(d) {
 
 /* ─── FIREBASE / LOCAL STORAGE ─── */
 function start() {
+  /* mostra subito i dati di default, poi aggiorna con Firebase */
+  deals = DEFDEALS.map(function(d){ return Object.assign({},d); });
+  acts  = DEFACTS.slice();
+  document.getElementById("app").style.display = "block";
+  render();
+
   try {
     firebase.initializeApp(FBCFG);
     db = firebase.database();
-    cloud = true;
-    document.getElementById("app").style.display = "block";
-    setBadge(true);
-    db.ref(FBPATH).on("value", function(snap) {
-      var data = snap.val() || {};
-      var rawDeals = toArr(data.deals) || toArr(data.offerte);
-      deals = rawDeals ? rawDeals.map(norm) : DEFDEALS.map(function(d){ return Object.assign({},d); });
-      acts  = toArr(data.activities) || toArr(data.acts) || DEFACTS.slice();
-      render();
-    });
+
+    /* timeout: se Firebase non risponde in 8s usa localStorage */
+    var fbTimer = setTimeout(function() {
+      console.warn("Firebase timeout — carico dati locali");
+      loadLocal();
+    }, 8000);
+
+    db.ref(FBPATH).on(
+      "value",
+      function(snap) {
+        clearTimeout(fbTimer);
+        var data = snap.val() || {};
+        var rawDeals = toArr(data.deals) || toArr(data.offerte);
+        if (rawDeals && rawDeals.length > 0) {
+          deals = rawDeals.map(norm);
+        }
+        var rawActs = toArr(data.activities) || toArr(data.acts);
+        if (rawActs && rawActs.length > 0) {
+          acts = rawActs;
+        }
+        cloud = true;
+        setBadge(true);
+        render();
+      },
+      function(err) {
+        clearTimeout(fbTimer);
+        console.warn("Firebase errore:", err.message);
+        /* regole scadute o errore permessi - usa localStorage */
+        cloud = false;
+        setBadge(false);
+        loadLocal();
+      }
+    );
   } catch(e) {
-    console.warn("Firebase:", e);
+    console.warn("Firebase init:", e);
     loadLocal();
   }
 }
