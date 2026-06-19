@@ -12,42 +12,6 @@
 body{font-family:Arial,sans-serif;background:#f0f4f9;color:#1a1a1a;min-height:100vh;}
 a{color:#1565c0;}
 
-/* ── WIZARD ── */
-#wizard{max-width:640px;margin:0 auto;padding:40px 20px;}
-.wiz-logo{font-size:24px;font-weight:700;color:#1E3A5F;letter-spacing:-.5px;margin-bottom:6px;}
-.wiz-logo span{color:#2B5F9E;}
-.wiz-sub{font-size:13px;color:#888;margin-bottom:32px;}
-.wiz-steps{display:flex;gap:0;margin-bottom:32px;}
-.wiz-step{flex:1;text-align:center;position:relative;}
-.wiz-step:not(:last-child)::after{content:'';position:absolute;top:18px;left:60%;width:80%;height:2px;background:#e0e7f0;}
-.wiz-dot{width:36px;height:36px;border-radius:50%;border:2px solid #dde3ed;background:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#bbb;margin:0 auto 8px;}
-.wiz-dot.done{background:#1E3A5F;border-color:#1E3A5F;color:#fff;}
-.wiz-dot.active{background:#2B5F9E;border-color:#2B5F9E;color:#fff;}
-.wiz-step-lbl{font-size:11px;color:#999;font-weight:600;}
-.wiz-step-lbl.active{color:#2B5F9E;}
-.wiz-step-lbl.done{color:#276221;}
-
-.wiz-card{background:#fff;border-radius:14px;border:1px solid #e0e7f0;padding:28px 32px;box-shadow:0 2px 12px rgba(0,0,0,.07);}
-.wiz-card h2{font-size:17px;font-weight:700;color:#1E3A5F;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
-.wiz-card p{font-size:13px;color:#555;line-height:1.7;margin-bottom:14px;}
-.wiz-card ol{font-size:13px;color:#444;line-height:2;padding-left:20px;margin-bottom:16px;}
-.wiz-card ol li strong{color:#1E3A5F;}
-.wiz-card code{background:#f0f4fa;padding:2px 7px;border-radius:5px;font-family:monospace;font-size:12px;color:#1E3A5F;display:inline-block;}
-.wiz-card code.block{display:block;padding:10px 14px;margin:10px 0;font-size:12px;line-height:1.6;border:1px solid #dde3ed;background:#f8fafd;border-radius:8px;white-space:pre;}
-.wiz-note{background:#fffde7;border:1px solid #f9a825;border-radius:8px;padding:10px 14px;font-size:12px;color:#5f4000;margin-bottom:16px;display:flex;align-items:flex-start;gap:8px;}
-.wiz-note i{flex-shrink:0;margin-top:1px;}
-.wiz-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer;border:none;border-radius:9px;font-family:Arial,sans-serif;transition:background .12s;}
-.wiz-btn-primary{background:#1E3A5F;color:#fff;}.wiz-btn-primary:hover{background:#2B5F9E;}
-.wiz-btn-secondary{background:#f0f4fa;color:#444;border:1px solid #dde3ed;}.wiz-btn-secondary:hover{background:#e4ebf5;}
-.wiz-btn-link{background:none;border:none;color:#2B5F9E;font-size:13px;font-weight:700;cursor:pointer;padding:0;font-family:Arial,sans-serif;text-decoration:underline;}
-.wiz-btn-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:20px;}
-.wiz-textarea{width:100%;border:1px solid #dde3ed;border-radius:8px;font-size:12px;font-family:monospace;padding:12px;min-height:180px;color:#1a1a1a;background:#f8fafd;resize:vertical;outline:none;}
-.wiz-textarea:focus{border-color:#2B5F9E;outline:2px solid #2B5F9E;}
-.wiz-feedback{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:13px;font-weight:600;display:none;}
-.wiz-feedback.ok{background:#C6EFCE;color:#276221;border:1px solid #8fcc8f;}
-.wiz-feedback.err{background:#FFC7CE;color:#9C0006;border:1px solid #f0a0a0;}
-.wiz-local-link{font-size:12px;color:#aaa;text-align:center;margin-top:20px;}
-.wiz-local-link a{color:#aaa;}
 
 /* ── CRM APP ── */
 .wrap{max-width:1120px;margin:0 auto;padding:24px 20px;}
@@ -191,109 +155,6 @@ input,select{font-family:Arial,sans-serif;}
 </head>
 <body>
 
-<!-- ═══════════════════════════════ WIZARD ═══════════════════════════════ -->
-<div id="wizard">
-  <div style="max-width:640px;margin:0 auto;padding:40px 20px;">
-    <div class="wiz-logo">kb<span>rand</span> CRM</div>
-    <div class="wiz-sub">Configurazione connessione cloud</div>
-
-    <div class="wiz-steps">
-      <div class="wiz-step">
-        <div class="wiz-dot active" id="dot1">1</div>
-        <div class="wiz-step-lbl active" id="lbl1">Progetto</div>
-      </div>
-      <div class="wiz-step">
-        <div class="wiz-dot" id="dot2">2</div>
-        <div class="wiz-step-lbl" id="lbl2">Database</div>
-      </div>
-      <div class="wiz-step">
-        <div class="wiz-dot" id="dot3">3</div>
-        <div class="wiz-step-lbl" id="lbl3">Configurazione</div>
-      </div>
-    </div>
-
-    <!-- Step 1 -->
-    <div class="wiz-card" id="wiz-s1">
-      <h2><i class="ti ti-brand-firebase" style="color:#f57c00"></i>Crea il progetto Firebase</h2>
-      <p>Firebase è il servizio cloud gratuito di Google che salverà i tuoi dati online. <strong>Non serve carta di credito</strong> — il piano gratuito è più che sufficiente.</p>
-      <ol>
-        <li>Vai su <a href="https://console.firebase.google.com" target="_blank"><strong>console.firebase.google.com</strong></a></li>
-        <li>Clicca <strong>"Aggiungi progetto"</strong></li>
-        <li>Nome progetto: <code>kbrand-crm</code> (o quello che preferisci)</li>
-        <li>Disabilita Google Analytics (non serve) → <strong>"Crea progetto"</strong></li>
-        <li>Aspetta il completamento e clicca <strong>"Continua"</strong></li>
-      </ol>
-      <div class="wiz-btn-row">
-        <a href="https://console.firebase.google.com" target="_blank" class="wiz-btn wiz-btn-primary">
-          <i class="ti ti-external-link"></i>Apri Firebase Console
-        </a>
-        <button class="wiz-btn wiz-btn-secondary" onclick="goStep(2)">
-          Ho creato il progetto <i class="ti ti-arrow-right"></i>
-        </button>
-      </div>
-    </div>
-
-    <!-- Step 2 -->
-    <div class="wiz-card" id="wiz-s2" style="display:none">
-      <h2><i class="ti ti-database" style="color:#2B5F9E"></i>Attiva il database</h2>
-      <p>Nella console Firebase del tuo progetto:</p>
-      <ol>
-        <li>Nel menu a sinistra clicca <strong>"Realtime Database"</strong></li>
-        <li>Clicca <strong>"Crea database"</strong></li>
-        <li>Scegli la posizione: <strong>Europe-west1 (Belgio)</strong> → Avanti</li>
-        <li>Seleziona <strong>"Inizia in modalità test"</strong> → Abilita</li>
-        <li>Clicca sulla scheda <strong>"Regole"</strong> e sostituisci tutto con:</li>
-      </ol>
-      <code class="block">{
-  "rules": {
-    ".read": true,
-    ".write": true
-  }
-}</code>
-      <ol start="6">
-        <li>Clicca <strong>"Pubblica"</strong></li>
-      </ol>
-      <div class="wiz-note"><i class="ti ti-info-circle"></i>Queste regole permettono accesso libero — adatto per uso interno. Se in futuro vuoi aggiungere password, possiamo farlo.</div>
-      <div class="wiz-btn-row">
-        <button class="wiz-btn wiz-btn-secondary" onclick="goStep(1)"><i class="ti ti-arrow-left"></i> Indietro</button>
-        <button class="wiz-btn wiz-btn-primary" onclick="goStep(3)">Database attivato <i class="ti ti-arrow-right"></i></button>
-      </div>
-    </div>
-
-    <!-- Step 3 -->
-    <div class="wiz-card" id="wiz-s3" style="display:none">
-      <h2><i class="ti ti-clipboard-text" style="color:#276221"></i>Incolla la configurazione</h2>
-      <p>Nella console Firebase del tuo progetto:</p>
-      <ol>
-        <li>Clicca l'icona <strong>⚙️ Impostazioni progetto</strong> (in alto a sinistra)</li>
-        <li>Scorri fino a <strong>"Le tue app"</strong></li>
-        <li>Clicca <strong>"&lt;/&gt;"</strong> (Web) → dai un nome all'app → <strong>Registra app</strong></li>
-        <li>Copia il blocco <code>firebaseConfig = { ... }</code> che appare</li>
-        <li>Incollalo qui sotto:</li>
-      </ol>
-      <textarea class="wiz-textarea" id="cfg-paste" placeholder="Incolla qui la configurazione Firebase, es:
-
-const firebaseConfig = {
-  apiKey: &quot;AIzaSy...&quot;,
-  authDomain: &quot;mio-progetto.firebaseapp.com&quot;,
-  databaseURL: &quot;https://mio-progetto-default-rtdb.europe-west1.firebasedatabase.app&quot;,
-  projectId: &quot;mio-progetto&quot;,
-  storageBucket: &quot;mio-progetto.appspot.com&quot;,
-  messagingSenderId: &quot;123456789&quot;,
-  appId: &quot;1:123456789:web:abc...&quot;
-};"></textarea>
-      <div class="wiz-feedback" id="wiz-fb"></div>
-      <div class="wiz-btn-row">
-        <button class="wiz-btn wiz-btn-secondary" onclick="goStep(2)"><i class="ti ti-arrow-left"></i> Indietro</button>
-        <button class="wiz-btn wiz-btn-primary" id="test-btn" onclick="testAndSave()">
-          <i class="ti ti-plug"></i>Testa e attiva
-        </button>
-      </div>
-      <div class="wiz-local-link">oppure <a href="#" onclick="useLocal();return false;">usa solo questo browser senza cloud</a></div>
-    </div>
-  </div>
-</div>
-
 <!-- ═══════════════════════════════ CRM APP ═══════════════════════════════ -->
 <div id="app" style="display:none">
 <div class="wrap">
@@ -306,7 +167,7 @@ const firebaseConfig = {
     <div class="top-right">
       <span class="saved-lbl" id="last-saved"></span>
       <span class="cloud-badge cloud-off" id="cloud-badge"><i class="ti ti-cloud-off" style="font-size:12px"></i>Locale</span>
-      <button class="cfg-btn" onclick="openWizard()" title="Modifica configurazione cloud"><i class="ti ti-settings" style="font-size:12px"></i>Cloud</button>
+      
     </div>
   </div>
 
@@ -397,71 +258,6 @@ const DEF_DEALS=[
 const DEF_ATT=["ALL IN ONE","WEB","CITYNEWS","DIGITAL","TOPOLINO","LEAPMOTOR","KM0","CITROËN BRANDING"];
 
 let deals=[],activities=[],curView='card',editingId=null,db=null,useFirebase=false;
-
-/* ══ WIZARD ══ */
-function goStep(n){
-  [1,2,3].forEach(function(i){
-    document.getElementById('wiz-s'+i).style.display=i===n?'block':'none';
-    var dot=document.getElementById('dot'+i), lbl=document.getElementById('lbl'+i);
-    dot.className='wiz-dot'+(i<n?' done':i===n?' active':'');
-    lbl.className='wiz-step-lbl'+(i<n?' done':i===n?' active':'');
-  });
-}
-
-function parseConfig(text){
-  var cfg={}, keys=['apiKey','authDomain','databaseURL','projectId','storageBucket','messagingSenderId','appId'];
-  keys.forEach(function(k){
-    var m=text.match(new RegExp(k+'\\s*:\\s*["\']([^"\'\\s]+)["\']'));
-    if(m) cfg[k]=m[1];
-  });
-  return (cfg.apiKey && cfg.databaseURL) ? cfg : null;
-}
-
-function testAndSave(){
-  var text=document.getElementById('cfg-paste').value;
-  var cfg=parseConfig(text);
-  var fb=document.getElementById('wiz-fb');
-  var btn=document.getElementById('test-btn');
-  if(!cfg){
-    fb.style.display='block'; fb.className='wiz-feedback err';
-    fb.textContent='Configurazione non riconosciuta. Assicurati di aver incollato il blocco firebaseConfig completo.';
-    return;
-  }
-  btn.textContent='Connessione in corso…'; btn.disabled=true;
-  try{
-    if(firebase.apps.length===0) firebase.initializeApp(cfg);
-    else firebase.app();
-    var testDb=firebase.database();
-    testDb.ref(FB_PATH+'/ping').set(Date.now()).then(function(){
-      localStorage.setItem(SK_CFG, JSON.stringify(cfg));
-      fb.style.display='block'; fb.className='wiz-feedback ok';
-      fb.textContent='✅ Connessione riuscita! Avvio CRM…';
-      btn.textContent='Connesso!';
-      setTimeout(function(){ initApp(cfg, testDb); }, 1000);
-    }).catch(function(e){
-      fb.style.display='block'; fb.className='wiz-feedback err';
-      fb.textContent='Errore: '+e.message+'. Controlla che le Regole del database siano state pubblicate.';
-      btn.textContent='Testa e attiva'; btn.disabled=false;
-    });
-  }catch(e){
-    fb.style.display='block'; fb.className='wiz-feedback err';
-    fb.textContent='Errore configurazione: '+e.message;
-    btn.textContent='Testa e attiva'; btn.disabled=false;
-  }
-}
-
-function useLocal(){
-  localStorage.removeItem(SK_CFG);
-  initApp(null, null);
-}
-
-function openWizard(){
-  document.getElementById('app').style.display='none';
-  document.getElementById('wizard').style.display='block';
-  var saved=localStorage.getItem(SK_CFG);
-  if(saved){ try{ document.getElementById('cfg-paste').value=JSON.stringify(JSON.parse(saved),null,2); }catch(e){} }
-  goStep(1);
-}
 
 /* ══ APP INIT ══ */
 var EMBEDDED_CFG={
