@@ -354,7 +354,6 @@ document.addEventListener("DOMContentLoaded",function(){
     switch(t.getAttribute("data-a")){
       case "edit":   startEdit(id); break;
       case "del":    delDeal(id);   break;
-      case "ag":     openAg(id);    break;
       case "save":   saveEdit(id);  break;
       case "cancel": cancelEdit();  break;
     }
@@ -385,7 +384,7 @@ function cV(d){
     "<div class='mr'>"+(d.inv?"<i class='ti ti-calendar-event'></i>Inviata il "+fmt(d.inv):"<i class='ti ti-calendar-off'></i><span style='color:#ccc'>Data invio non impostata</span>")+"</div>"+
     (d.ric?"<div class='mr ri'><i class='ti ti-bell'></i>Ricontatto "+fmt(d.ric)+"</div>":"")+
     ((ha||d.lnk)?"<div class='cf'>"+
-      (ha?" <button class='fb ag' data-a='ag' data-id='"+d.id+"'><i class='ti ti-calendar-event' style='font-size:11px'></i>"+al+"</button>":"")+
+      (d.ric?"<a class='fb ag' href='"+agUrl(d)+"' target='_blank' rel='noopener'><i class='ti ti-calendar-event' style='font-size:11px'></i>"+(d.cal||"Agenda")+"</a>":"")+
       (d.lnk?"<a class='fb pr' href='"+esc(d.lnk)+"' target='_blank' rel='noopener'><i class='ti ti-external-link' style='font-size:11px'></i>Apri proposta</a>":"")+
       "</div>":"")+
     "</div>";
@@ -421,7 +420,7 @@ function kV(d){
     (d.inv?"<div class='km'><i class='ti ti-calendar-event'></i>"+fmt(d.inv)+"</div>":"")+
     (d.ric?"<div class='km ri'><i class='ti ti-bell'></i>"+fmt(d.ric)+"</div>":"")+
     ((ha||d.lnk)?"<div class='kfo'>"+
-      (ha?"<button class='kfb ka' data-a='ag' data-id='"+d.id+"'><i class='ti ti-calendar-event'></i>"+al+"</button>":"")+
+      (d.ric?"<a class='kfb ka' href='"+agUrl(d)+"' target='_blank' rel='noopener'><i class='ti ti-calendar-event'></i>"+(d.cal||"Agenda")+"</a>":"")+
       (d.lnk?"<a class='kfb kp' href='"+esc(d.lnk)+"' target='_blank' rel='noopener'><i class='ti ti-external-link'></i>Proposta</a>":"")+
       "</div>":"")+
     "</div>";
