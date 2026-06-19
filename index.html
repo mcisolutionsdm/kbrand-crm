@@ -236,6 +236,19 @@ function fmt(iso){if(!iso)return null;var p=iso.split("-");return p[2]+"/"+p[1]+
 function pd(iso){return iso?new Date(iso).getTime():0;}
 function esc(s){if(!s)return"";return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 
+function norm(d){
+  /* compatibilità con tutti i formati precedenti */
+  return {
+    id:   d.id || uid(),
+    c:    d.c || d.cliente || "",
+    a:    d.a || d.attività || d.attivita || "-",
+    stato:d.stato || d.s || "bozza",
+    inv:  d.inv || d.inviata || null,
+    ric:  d.ric || d.ricontatto || null,
+    cal:  d.cal || d.tipo_cal || d.k || null,
+    lnk:  d.lnk || d.link || d.l || null
+  };
+}
 function start(){
   try{
     firebase.initializeApp(CFG);
@@ -244,8 +257,8 @@ function start(){
     show(true);
     db.ref(FP).on("value",function(sn){
       var d=sn.val()||{};
-      deals=arr(d.deals)||cl(DD);
-      acts=arr(d.acts)||DA.slice();
+      var raw=arr(d.deals)||arr(d.offerte);deals=raw?raw.map(norm):cl(DD);
+      acts=arr(d.activities)||arr(d.acts)||DA.slice();
       render();
     });
   }catch(e){
@@ -261,7 +274,7 @@ function show(on){
   el.innerHTML=on?"<i class='ti ti-cloud' style='font-size:12px'></i> Cloud attivo":"<i class='ti ti-cloud-off' style='font-size:12px'></i> Locale";
 }
 function local(){
-  try{var r=localStorage.getItem(SK);deals=r?JSON.parse(r):cl(DD);}catch(e){deals=cl(DD);}
+  try{var r=localStorage.getItem(SK);var raw=r?JSON.parse(r):null;deals=raw?raw.map(norm):cl(DD);}catch(e){deals=cl(DD);}
   try{var r2=localStorage.getItem(SA);acts=r2?JSON.parse(r2):DA.slice();}catch(e){acts=DA.slice();}
   show(false);render();
 }
